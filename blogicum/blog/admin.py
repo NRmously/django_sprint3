@@ -14,7 +14,6 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display_links = ('title', )
     list_editable = ('is_published', )
     list_filter = ('created_at', )
-    empty_value_display = 'Не задано'
 
 
 @admin.register(Location)
@@ -24,7 +23,6 @@ class LocationAdmin(admin.ModelAdmin):
     list_display_links = ('name', )
     list_editable = ('is_published', )
     list_filter = ('created_at', )
-    empty_value_display = 'Не задано'
 
 
 @admin.register(Post)
@@ -35,4 +33,3 @@ class PostAdmin(admin.ModelAdmin):
     list_display_links = ('title', )
     list_editable = ('category', 'is_published', 'location')
     list_filter = ('created_at', )
-    empty_value_display = 'Не задано'

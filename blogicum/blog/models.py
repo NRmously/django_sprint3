@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
 
@@ -5,14 +6,22 @@ from django.db import models
 User = get_user_model()
 
 
-class BaseBlogModel(models.Model):
-    """Абстрактная модель. Добвляет флаг is_published и created_at"""
+class IsPublishedModel(models.Model):
+    """Абстрактная модель. Добвляет флаг is_published"""
 
     is_published = models.BooleanField(
         default=True,
         help_text='Снимите галочку, чтобы скрыть публикацию.',
         verbose_name='Опубликовано'
     )
+
+    class Meta:
+        abstract = True
+
+
+class CreatedAtModel(models.Model):
+    """Абстрактная модель. Добвляет флаг created_at"""
+
     created_at = models.DateTimeField(
         auto_now_add=True,
         verbose_name='Добавлено'
@@ -23,9 +32,9 @@ class BaseBlogModel(models.Model):
         ordering = ('created_at', )
 
 
-class Category(BaseBlogModel):
+class Category(IsPublishedModel, CreatedAtModel):
     title = models.CharField(
-        max_length=256,
+        max_length=settings.MAX_STRING_LENGTH,
         verbose_name='Заголовок'
     )
     description = models.TextField(verbose_name='Описание')
@@ -36,7 +45,7 @@ class Category(BaseBlogModel):
         verbose_name='Идентификатор'
     )
 
-    class Meta:
+    class Meta(CreatedAtModel.Meta):
         verbose_name = 'категория'
         verbose_name_plural = 'Категории'
 
@@ -44,10 +53,13 @@ class Category(BaseBlogModel):
         return self.title
 
 
-class Location(BaseBlogModel):
-    name = models.CharField(max_length=256, verbose_name='Название места')
+class Location(IsPublishedModel, CreatedAtModel):
+    name = models.CharField(
+        max_length=settings.MAX_STRING_LENGTH,
+        verbose_name='Название места'
+    )
 
-    class Meta:
+    class Meta(CreatedAtModel.Meta):
         verbose_name = 'местоположение'
         verbose_name_plural = 'Местоположения'
 
@@ -55,8 +67,11 @@ class Location(BaseBlogModel):
         return self.name
 
 
-class Post(BaseBlogModel):
-    title = models.CharField(max_length=256, verbose_name='Заголовок')
+class Post(IsPublishedModel, CreatedAtModel):
+    title = models.CharField(
+        max_length=settings.MAX_STRING_LENGTH,
+        verbose_name='Заголовок'
+    )
     text = models.TextField(verbose_name='Текст')
     pub_date = models.DateTimeField(
         help_text='Если установить дату и время в будущем — можно делать '
@@ -82,7 +97,7 @@ class Post(BaseBlogModel):
         verbose_name='Категория'
     )
 
-    class Meta:
+    class Meta(CreatedAtModel.Meta):
         default_related_name = 'posts'
         verbose_name = 'публикация'
         verbose_name_plural = 'Публикации'
