@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render, get_object_or_404, get_list_or_404
 from django.utils.timezone import now
 
-from .models import Post
+from .models import Post, Category
 
 
 def filters():
@@ -40,6 +40,9 @@ def category_posts(request: HttpRequest, category: str) -> HttpResponse:
             category__slug=category
         )
     )
+    category = Category.objects.values('title', 'description').get(
+        slug=category
+    )
     template = 'blog/category.html'
-    context = {'post_list': post_list}
+    context = {'post_list': post_list, 'category': category}
     return render(request, template, context)
