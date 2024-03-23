@@ -97,7 +97,7 @@ class Post(IsPublishedModel, CreatedAtModel):
         verbose_name='Категория'
     )
 
-    class Meta(CreatedAtModel.Meta):
+    class Meta:
         default_related_name = 'posts'
         verbose_name = 'публикация'
         verbose_name_plural = 'Публикации'
