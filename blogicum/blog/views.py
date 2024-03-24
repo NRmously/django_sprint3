@@ -7,7 +7,7 @@ from django.db.models.query import QuerySet
 from .models import Post, Category
 
 
-def is_published_filter(*args: list) -> QuerySet:
+def is_published_filter() -> QuerySet:
     return Post.objects.select_related(
         'author', 'category', 'location'
     ).filter(
